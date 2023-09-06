@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.StudyBuddy" parent="Base.Theme.StudyBuddy" />
+
+    <style name="SplashTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">#84C5E2</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
 </resources>
