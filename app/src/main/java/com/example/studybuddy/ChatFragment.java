@@ -1,5 +1,6 @@
 package com.example.studybuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -91,6 +93,19 @@ public class ChatFragment extends Fragment {
         InitializeField();
 
         RetrieveAndDisplayGroup()  ;
+
+        list_View.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String currentGroupName = parent .getItemAtPosition(position).toString() ;
+
+                Intent groupChatIntent = new Intent(getContext(), ChatActivity.class);
+
+                groupChatIntent.putExtra("groupName",currentGroupName);
+                startActivity(groupChatIntent);
+            }
+        });
 
         return groupFragmentView ;
     }
