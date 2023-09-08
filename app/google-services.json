@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1073487749630",
+    "project_id": "studybuddy-cf90d",
+    "storage_bucket": "studybuddy-cf90d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073487749630:android:5cfc9f2002f6c0d4b4a0af",
+        "android_client_info": {
+          "package_name": "com.example.studybuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073487749630-ons5tqfbm4nc87en4lmj3t3ms50v0fbm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIVew3QLavgby1a6JHT3zeveTsNVi5yQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073487749630-ons5tqfbm4nc87en4lmj3t3ms50v0fbm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
