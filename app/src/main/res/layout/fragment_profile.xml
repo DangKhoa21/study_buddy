@@ -1,14 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/cover_img"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@color/blue"
+                android:scaleType="fitXY">
+            </ImageView>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="100dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/avatar_img"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/green"
+                    android:src="@drawable/profile"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_grey"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/email_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="0dp"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/edit_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/sky"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="18sp"
+        android:text="Edit"
+        app:icon="@drawable/edit"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/change_pass_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_fab"
+        android:layout_alignEnd="@+id/edit_fab"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/sky"
+        android:contentDescription="TODO"
+        android:src="@drawable/password"
+        app:fabSize="normal"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <TextView
+        android:id="@+id/change_pass_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:layout_alignBottom="@+id/change_pass_fab"
+        android:layout_toStartOf="@+id/change_pass_fab"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="18sp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/change_photo_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/change_pass_fab"
+        android:layout_alignEnd="@+id/change_pass_fab"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/sky"
+        app:fabSize="normal"
+        android:src="@drawable/photo"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/change_photo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photo"
+        android:layout_alignBottom="@+id/change_photo_fab"
+        android:layout_toStartOf="@+id/change_photo_fab"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="18sp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/change_name_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/change_photo_fab"
+        android:layout_alignEnd="@+id/change_photo_fab"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/sky"
+        app:fabSize="normal"
+        android:src="@drawable/name"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/change_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:layout_alignBottom="@+id/change_name_fab"
+        android:layout_toStartOf="@+id/change_name_fab"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="18sp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp" />
+
+</RelativeLayout>
