@@ -12,6 +12,10 @@
         <item name="colorPrimary">#84C5E2</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
+    
+    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+
+    </style>
 
     <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
 
