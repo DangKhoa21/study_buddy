@@ -98,7 +98,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String currentGroupName = parent .getItemAtPosition(position).toString() ;
+                String currentGroupName = parent.getItemAtPosition(position).toString() ;
 
                 Intent groupChatIntent = new Intent(getContext(), ChatActivity.class);
 
