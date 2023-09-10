@@ -331,7 +331,7 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                     if (key.equals("name")) {
-                        final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Posts");
+                        final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Group");
                         Query query = databaser.orderByChild("uid").equalTo(uid);
                         query.addValueEventListener(new ValueEventListener() {
                             @Override

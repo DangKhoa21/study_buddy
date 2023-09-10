@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_grey"
+            android:layout_marginTop="0dp"
+            android:hint="Group name"
+            android:gravity="start"
+            android:minHeight="80dp"
+            android:padding="10dp" />
+
+        <ImageView
+            android:id="@+id/group_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/light_grey"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/photo" />
+
+        <EditText
+            android:id="@+id/group_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/light_grey"
+            android:src="@drawable/edit"
+            android:gravity="start"
+            android:hint="Description"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minHeight="120dp"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/create_group_butt"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Create group"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+</ScrollView>
