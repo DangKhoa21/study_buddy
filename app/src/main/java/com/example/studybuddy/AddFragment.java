@@ -249,7 +249,7 @@ public class AddFragment extends Fragment {
                     hashMap.put("udp", dp);
                     hashMap.put("gname", gname);
                     hashMap.put("description", description);
-                    hashMap.put("uimage", downloadUri);
+                    hashMap.put("gimage", downloadUri);
                     hashMap.put("gtime", timestamp);
 
                     // set the data into firebase and then empty the title ,description and image data
