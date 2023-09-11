@@ -1,6 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.StudyBuddy" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="Base.Theme.StudyBuddy" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorAccent">@color/sky</item>
+    </style>
+
+    <style name="ChatTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorAccent">@color/sky</item>
@@ -12,9 +18,10 @@
         <item name="colorPrimary">#84C5E2</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
-    
-    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+
+    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog" >
 
     </style>
+
 
 </resources>

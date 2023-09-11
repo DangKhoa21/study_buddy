@@ -1,6 +1,7 @@
 package com.example.studybuddy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton SendMessageButton ;
     private EditText userMessageInput ;
     private ScrollView mScrollView;
-    private TextView displayTextView ;
+    private TextView displayTextMessage ;
 
     private FirebaseAuth mAuth ;
     private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef;
@@ -82,6 +84,50 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        GroupNameRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+                if(snapshot.exists())
+                {
+                    DisplayMessage(snapshot);
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+                if(snapshot.exists())
+                {
+                    DisplayMessage(snapshot);
+                }
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private void InitializeFields() {
         mToolbar = getSupportActionBar();
@@ -89,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
         userMessageInput = (EditText) findViewById(R.id.input_group_message);
-        displayTextView = (TextView) findViewById(R.id.group_chat_text);
+        displayTextMessage = (TextView) findViewById(R.id.group_chat_text);
 
         mScrollView = (ScrollView) findViewById(R.id.my_scroll_view);
     }
@@ -144,5 +190,22 @@ public class ChatActivity extends AppCompatActivity {
             messageInfoMap.put("time", currentTime);
             GroupMessageKeyRef.updateChildren(messageInfoMap);
         }
+    }
+
+    private void DisplayMessage(DataSnapshot snapshot)
+    {
+        Iterator iterator = snapshot.getChildren().iterator();
+
+        while (iterator.hasNext()){
+            String chatDate = (String)  ((DataSnapshot)iterator.next()) .getValue();
+            String chatMessage = (String)  ((DataSnapshot)iterator.next()) .getValue();
+            String chatName = (String)  ((DataSnapshot)iterator.next()) .getValue();
+            String chatTime = (String)  ((DataSnapshot)iterator.next()) .getValue();
+
+            displayTextMessage.append(chatName + " :\n" + chatMessage + "\n" + chatName + "   "  + chatDate + "\n\n\n");
+
+            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        }
+
     }
 }
