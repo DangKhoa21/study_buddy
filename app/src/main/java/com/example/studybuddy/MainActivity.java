@@ -98,7 +98,17 @@ public class MainActivity extends AppCompatActivity {
           RequestNewGroup();
         }
 
+        if(item.getItemId() == R.id.find_friends){
+            sendToFindFriendActivity();
+        }
+
         return true;
+    }
+
+    private void sendToFindFriendActivity()
+    {
+        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
     }
 
     private void RequestNewGroup() {

@@ -12,6 +12,11 @@
                 android:title="Create group chat"
                 app:showAsAction="never"/>
 
+            <item
+                android:id="@+id/find_friends"
+                android:title="Find Friends"
+                app:showAsAction="never"/>
+
         </menu>
 
     </item>
