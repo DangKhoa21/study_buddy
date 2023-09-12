@@ -33,6 +33,7 @@ import android.Manifest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -264,6 +265,9 @@ public class AddFragment extends Fragment {
                                     desEd.setText("");
                                     imageVi.setImageURI(null);
                                     imageUri = null;
+
+                                    BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_nav);
+                                    bottomNav.setSelectedItemId(R.id.home);
 
                                     Fragment fragment = new HomeFragment();
                                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

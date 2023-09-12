@@ -94,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if(item.getItemId() == R.id.create_group) {
-          RequestNewGroup();
+        if(item.getItemId() == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         }
 
         if(item.getItemId() == R.id.find_friends){
@@ -109,52 +111,5 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
         startActivity(findFriendsIntent);
-    }
-
-    private void RequestNewGroup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog);
-        builder.setTitle("Enter Group Name : ") ;
-
-        final EditText groupNameField = new EditText(MainActivity.this);
-        groupNameField.setHint("e.g Study Buddy");
-        builder.setView(groupNameField);
-
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                String groupName = groupNameField.getText().toString() ;
-
-                if(TextUtils.isEmpty(groupName)){
-                    Toast.makeText(MainActivity.this, "Please write group name", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
-                    createNewGroup(groupName);
-
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-
-            }
-        });
-
-        builder.show();
-    }
-
-    private void createNewGroup(String groupName) {
-        RootRef.child("Group").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this,groupName + " group is Created Successful",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 }

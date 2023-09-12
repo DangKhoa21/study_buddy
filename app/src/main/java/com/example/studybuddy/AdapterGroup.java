@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,9 +73,10 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
             holder.group_image.setImageResource(R.drawable.photo);
         }
 
-        DatabaseReference groupMemberRef = FirebaseDatabase.getInstance().getReference().child("Groups")
+        DatabaseReference groupMemberRef = FirebaseDatabase.getInstance().getReference().child("Group")
                 .child(gname).child("member");
 
+        // Check joined status for this item
         groupMemberRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,44 +92,28 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.join_butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean joined = holder.join_butt.getText().equals("JOINED"); // Check if already joined
 
-                    groupMemberRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                            String childKey = childSnapshot.getKey();
-                            if (childKey.equals(myuid)) {
-                                Toast.makeText(context, "Already joined", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                        }
-                    }
+                if (!joined) {
+                    groupMemberRef.child(myuid).setValue("true");
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                    holder.join_butt.setText("JOINED");
+                    holder.join_butt.setBackgroundTintList((ContextCompat.getColorStateList(context, R.color.dark_grey)));
+                    Toast.makeText(context, "Joined!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Already joined", Toast.LENGTH_SHORT).show();
+                }
 
-                HashMap<Object, String> hashMap = new HashMap<>();
-                hashMap.put(myuid, "true");
-
-                groupMemberRef.setValue(hashMap);
-
-                holder.join_butt.setText("JOINED");
-                holder.join_butt.setBackgroundTintList((ContextCompat.getColorStateList(context, R.color.dark_grey)));
-                Toast.makeText(context, "Joined!", Toast.LENGTH_LONG).show();
-
+                notifyItemChanged(holder.getBindingAdapterPosition());
             }
         });
-
     }
 
     @Override
@@ -152,7 +136,5 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
             join_butt = itemView.findViewById(R.id.join_butt);
         }
     }
-
-
 
 }
