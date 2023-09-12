@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
         Intent i = getIntent();
         currentGroupName = i.getExtras().getString("groupName");
 
-        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Group").child(currentGroupName);
+        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Group").child(currentGroupName).child("message");
 
 
 
@@ -202,7 +202,7 @@ public class ChatActivity extends AppCompatActivity {
             String chatName = (String)  ((DataSnapshot)iterator.next()) .getValue();
             String chatTime = (String)  ((DataSnapshot)iterator.next()) .getValue();
 
-            displayTextMessage.append(chatName + " :\n" + chatMessage + "\n" + chatName + "   "  + chatDate + "\n\n\n");
+            displayTextMessage.append(chatName + " :\n" + chatMessage + "\n" + chatTime + "   "  + chatDate + "\n\n\n");
 
             mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
