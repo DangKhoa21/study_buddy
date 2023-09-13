@@ -84,32 +84,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_chat_items,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
-
-        if(item.getItemId() == R.id.logout) {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
-
-        if(item.getItemId() == R.id.find_friends){
-            sendToFindFriendActivity();
-        }
-
-        return true;
-    }
-
-    private void sendToFindFriendActivity()
-    {
-        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
-        startActivity(findFriendsIntent);
-    }
 }

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Group name"
             android:id="@id/group_name"
-            android:layout_toRightOf="@+id/group_image"
+            android:layout_toEndOf="@+id/group_image"
             android:textSize="18sp"
             android:textColor="@color/black"
             android:fontFamily="@font/inter_semibold"
@@ -41,7 +41,7 @@
             android:id="@+id/group_des"
             android:text="Description"
             android:layout_below="@+id/group_name"
-            android:layout_alignLeft="@+id/group_name"
+            android:layout_alignStart="@+id/group_name"
             android:textSize="16sp"
             android:textColor="@color/black"
             android:fontFamily="@font/inter_medium"
@@ -49,7 +49,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="48dp"
             android:text="JOIN"
             android:textSize="18sp"
             android:textColor="@color/black"

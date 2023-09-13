@@ -14,17 +14,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
@@ -49,7 +56,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class ProfileFragment extends Fragment {
@@ -77,7 +86,11 @@ public class ProfileFragment extends Fragment {
     private ExtendedFloatingActionButton editFab;
     private TextView changePasswordText, changePhotoText, changeNameText;
     private Boolean isAllFabsVisible = false;
-    
+
+    RecyclerView recyclerView;
+    List<ModelGroup> group_list;
+    AdapterGroup adapterGroup;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -176,6 +189,15 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        recyclerView = view.findViewById(R.id.group_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        group_list = new ArrayList<>();
+        loadMyGroups();
 
         passwordFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -501,6 +523,65 @@ public class ProfileFragment extends Fragment {
             }
             break;
         }
+    }
+
+    private void loadMyGroups() {
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Group");
+        Query query = databaseReference.orderByChild("uid").equalTo(firebaseAuth.getCurrentUser().getUid());
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                group_list.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelGroup modelGroup = dataSnapshot1.getValue(ModelGroup.class);
+                    group_list.add(modelGroup);
+                    adapterGroup = new AdapterGroup(getActivity(), group_list);
+                    recyclerView.setAdapter(adapterGroup);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_chat_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if(item.getItemId() == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getContext(), MainActivity.class));
+            getActivity().finish();
+        }
+
+        if(item.getItemId() == R.id.find_friends){
+            sendToFindFriendActivity();
+        }
+
+        return true;
+    }
+
+    private void sendToFindFriendActivity()
+    {
+        Intent findFriendsIntent = new Intent(getActivity(), FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
     }
 
 }
