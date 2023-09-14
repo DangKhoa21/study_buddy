@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +25,7 @@ public class CalendarFragment extends Fragment {
 
     CalendarView calendarView ;
     TextView textView ;
+    Calendar calendar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,13 +77,39 @@ public class CalendarFragment extends Fragment {
         calendarView = root.findViewById(R.id.calendar);
         textView = root.findViewById(R.id.textview);
 
+        calendar = Calendar.getInstance();
+
+        setDate(1,0,2023);
+        getDate();
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth +"/" + month +"/" +year ;
-                textView.setText(date);
+                month = month+1 ;
+                String date = dayOfMonth +"/" + month   +"/" +year ;
+                textView.setText("Today is : " + date);
+                Toast.makeText(getContext(), dayOfMonth + "/"+ month +"/" + year, Toast.LENGTH_SHORT).show();
             }
         });
         return root;
+    }
+    public void setDate(int day , int month , int year) {
+        calendar.set(Calendar.YEAR , year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH,day);
+
+        long milli = calendar.getTimeInMillis() ;
+        calendarView.setDate(milli);
+
+    }
+
+    public void getDate(){
+        long date =calendarView.getDate();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        calendar.setTimeInMillis(date);
+
+        String selected_date = simpleDateFormat .format(calendar.getTime()) ;
+
+        Toast.makeText(getContext(), selected_date, Toast.LENGTH_SHORT).show();
     }
 }

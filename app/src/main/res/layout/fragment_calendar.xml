@@ -9,14 +9,17 @@
     <CalendarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
         android:id="@+id/calendar"></CalendarView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textview"
-        android:layout_above="@+id/calendar">
+        android:text="Today is : 1/1/2023"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_below="@+id/calendar">
 
     </TextView>
 
