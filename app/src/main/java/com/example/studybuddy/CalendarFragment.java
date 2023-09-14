@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -79,15 +81,20 @@ public class CalendarFragment extends Fragment {
 
         calendar = Calendar.getInstance();
 
-        setDate(1,0,2023);
-        getDate();
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        textView.setText("Today is : " + currentDate);
+
+
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 month = month+1 ;
                 String date = dayOfMonth +"/" + month   +"/" +year ;
-                textView.setText("Today is : " + date);
+
+                Log.d("date" , date);
+
+                textView.setText("This Date is : " + date);
                 Toast.makeText(getContext(), dayOfMonth + "/"+ month +"/" + year, Toast.LENGTH_SHORT).show();
             }
         });
