@@ -8,11 +8,9 @@
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
     <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+        android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -32,7 +30,8 @@
         <activity
             android:name=".ChatActivity"
             android:exported="false"
-            android:theme="@style/ChatTheme" />
+            android:theme="@style/ChatTheme"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
