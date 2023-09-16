@@ -10,57 +10,53 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Password update"
+        android:text="New meeting"
         android:textAlignment="center"
         android:fontFamily="@font/inter_semibold"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/oldpass"
+        android:id="@+id/datetimeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
-        app:passwordToggleEnabled="true">
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
 
         <EditText
-            android:id="@+id/oldpasslog"
+            android:id="@+id/datetimeEd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Old Password"
-            android:inputType="textPassword" />
+            android:hint="Date/Time (dd/MM/yyyy hh:mm)"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newpass"
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/oldpasslog"
-        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        app:passwordToggleEnabled="true">
+        android:layout_marginTop="10dp" >
 
         <EditText
-            android:id="@+id/newpasslog"
+            android:id="@+id/contentEd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="New Password"
-            android:inputType="textPassword" />
+            android:hint="Content" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/updatepass"
+        android:id="@+id/createMeetingButt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:padding="15dp"
         android:background="@drawable/round_butt"
-        android:text="Update Password"
+        android:text="Create Meeting"
         android:fontFamily="@font/inter_medium"
         android:textColor="@color/black"
         android:textSize="14sp"/>

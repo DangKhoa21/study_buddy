@@ -97,6 +97,14 @@ public class AdapterMessage extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ReceivedMessageViewHolder) holder).messageText.setVisibility(View.GONE);
                 ((ReceivedMessageViewHolder) holder).dateText.setText(String.format("%s %s", date, time));
 
+                ((ReceivedMessageViewHolder) holder).profileImage.setVisibility(View.VISIBLE);
+                try {
+                    Glide.with(context).load(uimage).placeholder(R.drawable.profile)
+                            .into(((ReceivedMessageViewHolder) holder).profileImage);
+                } catch (Exception e) {
+                    ((ReceivedMessageViewHolder) holder).profileImage.setImageResource(R.drawable.profile);
+                }
+
                 ((ReceivedMessageViewHolder) holder).uploadImage.setVisibility(View.VISIBLE);
                 try {
                     Glide.with(context).load(message).placeholder(R.drawable.photo)
@@ -104,6 +112,7 @@ public class AdapterMessage extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 } catch (Exception e) {
                     ((ReceivedMessageViewHolder) holder).uploadImage.setImageResource(R.drawable.photo);
                 }
+                
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((ReceivedMessageViewHolder) holder).dateText.getLayoutParams();
                 params.addRule(RelativeLayout.BELOW, ((ReceivedMessageViewHolder) holder).uploadImage.getId());
                 ((ReceivedMessageViewHolder) holder).dateText.setLayoutParams(params);

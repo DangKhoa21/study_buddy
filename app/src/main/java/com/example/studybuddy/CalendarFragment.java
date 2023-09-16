@@ -32,146 +32,108 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CalendarFragment extends Fragment {
 
     CalendarView calendarView ;
-    TextView textView ;
+    TextView meetingText ;
     Calendar calendar;
-    FloatingActionButton addNoteBtn;
-    RecyclerView    recyclerView ;
 
-    NoteAdapter noteAdapter;
+    RecyclerView recyclerView ;
+    AdapterMeeting adapterMeeting;
+    List<ModelMeeting> modelMeetingList ;
 
-    Context mContext ;
-    List<Note> note_list ;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
-
-
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CalendarFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CalendarFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CalendarFragment newInstance(String param1, String param2) {
-        CalendarFragment fragment = new CalendarFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    String myuid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_calendar,null);
+        calendarView = view.findViewById(R.id.calendar);
+        meetingText = view.findViewById(R.id.meetingText);
+        calendar = Calendar.getInstance();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        calendarView = root.findViewById(R.id.calendar);
-        textView = root.findViewById(R.id.textview);
-
-        calendar = Calendar.getInstance();
-
-        addNoteBtn = root.findViewById(R.id.add_note);
-
-        note_list = new ArrayList<>();
-
-
-        recyclerView = root.findViewById(R.id.recyclerview_calendar);
-
+        recyclerView = view.findViewById(R.id.meeting_recyclerview);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-
-        noteAdapter = new NoteAdapter( note_list,getActivity());
-        recyclerView.setAdapter(noteAdapter);
-
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar").child("my_notes").child("title");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snapshot1: snapshot.getChildren()){
-                    Note noteList = snapshot1.getValue(Note.class);
-                    note_list.add(noteList);
-                }
-                noteAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-        addNoteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent ;
-                intent = new Intent(getContext() , NoteActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-        textView.setText("Today is : " + currentDate);
-
-
+        modelMeetingList = new ArrayList<>();
+        loadMeetings();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                month = month+1 ;
-                String date = dayOfMonth +"/" + month   +"/" +year ;
+                month = month + 1;
+                String date = dayOfMonth + "/" + month + "/" + year;
+                int count = 0;
 
-                Log.d("date" , date);
+                for (ModelMeeting meeting : modelMeetingList) {
+                    String datetime = meeting.getDatetime();
+                    if (datetime.startsWith(date)) {
+                        count++;
+                    }
+                }
 
-                textView.setText("This Date is : " + date);
-                Toast.makeText(getContext(), dayOfMonth + "/"+ month +"/" + year, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "There are " + count + " meetings scheduled on this date", Toast.LENGTH_SHORT).show();
             }
         });
-        return root;
+
+        return view;
     }
 
+    private void loadMeetings() {
+
+        myuid = firebaseAuth.getCurrentUser().getUid();
+        DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("Group");
+        groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot groupSnapshot) {
+                final List<String> groupNames = new ArrayList<>();
+                for (DataSnapshot groupData : groupSnapshot.getChildren()) {
+                    String groupName = groupData.getKey();
+                    DataSnapshot membersSnapshot = groupData.child("member");
+                    if (membersSnapshot.hasChild(myuid)) {
+                        groupNames.add(groupName);
+                    }
+                }
+
+                //meetings belong to those groups
+                databaseReference = FirebaseDatabase.getInstance().getReference("Calendar");
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        modelMeetingList.clear();
+                        for(DataSnapshot meetingSnapshot : snapshot.getChildren()){
+                            ModelMeeting modelMeeting = meetingSnapshot.getValue(ModelMeeting.class);
+                            if (modelMeeting != null && groupNames.contains(modelMeeting.getGname())) {
+                                modelMeetingList.add(modelMeeting);
+                            }
+                        }
+                        adapterMeeting = new AdapterMeeting(getActivity(), modelMeetingList);
+                        recyclerView.setAdapter(adapterMeeting);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     public void setDate(int day , int month , int year) {
         calendar.set(Calendar.YEAR , year);

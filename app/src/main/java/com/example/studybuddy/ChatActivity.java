@@ -2,7 +2,9 @@ package com.example.studybuddy;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -53,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText userMessageInput ;
 
     private FirebaseAuth mAuth ;
-    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef;
+    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, MeetingRef, MeetingKeyRef;
 
     private String currentGroupName ,currentUserID , currentUserName, currentUserImage, currentDate , currentTime;
 
@@ -110,15 +117,15 @@ public class ChatActivity extends AppCompatActivity {
         addFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImagePickDialog();
+                showMoreDialog();
             }
         });
     }
 
-    private void showImagePickDialog() {
-        String[] options = {"Camera", "Gallery"};
+    private void showMoreDialog() {
+        String[] options = {"Send image from camera", "Send image from gallery", "Create a new meeting"};
         android.app.AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick Image From");
+        builder.setTitle("More");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -135,13 +142,82 @@ public class ChatActivity extends AppCompatActivity {
                     } else {
                         pickFromGallery();
                     }
+                } else if (which == 2) {
+                    showCreateMeetingDialog();
                 }
             }
         });
         builder.create().show();
     }
 
-    private void pickFromGallery(){
+    private void showCreateMeetingDialog() {
+        final View view = LayoutInflater.from(this).inflate(R.layout.dialog_create_meeting, null);
+        final EditText dateTimeField = view.findViewById(R.id.datetimeEd);
+        final EditText contentField = view.findViewById(R.id.contentEd);
+        Button createMeetingButt = view.findViewById(R.id.createMeetingButt);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dateTimeField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimePickerDialog(dateTimeField);
+            }
+        });
+
+        createMeetingButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String datetime = dateTimeField.getText().toString().trim();
+                String content = contentField.getText().toString().trim();
+                if (TextUtils.isEmpty(content)) {
+                    Toast.makeText(getApplicationContext(), "Content cannot be empty", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                dialog.dismiss();
+
+                MeetingRef = FirebaseDatabase.getInstance().getReference().child("Calendar");
+                String meetingKey = MeetingRef.push().getKey();
+                MeetingKeyRef = MeetingRef.child(meetingKey);
+
+                HashMap<String, Object> meetingInfoMap = new HashMap<>();
+                meetingInfoMap.put("datetime", datetime);
+                meetingInfoMap.put("content", content);
+                meetingInfoMap.put("gname", currentGroupName);
+                MeetingKeyRef.updateChildren(meetingInfoMap);
+            }
+        });
+    }
+
+    private void showDateTimePickerDialog(final EditText dateTimeField) {
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        final TimePickerDialog timePickerDialog = new TimePickerDialog(ChatActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                String dateTime = String.format(Locale.getDefault(), "%d/%d/%d %d:%d", dayOfMonth, monthOfYear + 1, year, hourOfDay, minute);
+                                dateTimeField.setText(dateTime);
+                            }
+                        }, hour, minute, true);
+                        timePickerDialog.show();
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void pickFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);

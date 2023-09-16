@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date/Time"
+        android:id="@+id/datetimeText"
+        android:fontFamily="@font/inter_semibold"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/contentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Content"
+        android:ellipsize="end"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_below="@id/datetimeText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group name"
+        android:id="@+id/groupNameText"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_alignParentEnd="true"/>
+
+
+</RelativeLayout>

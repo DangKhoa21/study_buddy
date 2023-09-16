@@ -5,65 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".CalendarFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <CalendarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:id="@+id/calendar"></CalendarView>
+        android:id="@+id/calendar">
+    </CalendarView>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_below="@+id/calendar">
-
-    </TextView>
-
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title_calendar"
-        android:layout_below="@+id/textview">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/page_title"
-            android:textSize="32sp"
-            android:textColor="@color/black"
-            android:text="EVENT "
-            android:layout_centerVertical="true"
-            android:layout_centerInParent="true"
-            android:textStyle="bold"/>
-
-    </RelativeLayout>
+        android:id="@+id/meetingText"
+        android:text="Meetings"
+        android:fontFamily="@font/inter_bold"
+        android:textSize="22sp"
+        android:layout_below="@+id/calendar"
+        android:gravity="center">
+    </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerview_calendar"
-        android:layout_below="@+id/title_calendar"
-        >
-
-
+        android:id="@+id/meeting_recyclerview"
+        android:layout_below="@+id/meetingText" >
     </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/blue"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/add_icon"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
-        android:id="@+id/add_note"
-
-        />
 
 </RelativeLayout>
