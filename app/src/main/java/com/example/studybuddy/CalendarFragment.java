@@ -1,9 +1,13 @@
 package com.example.studybuddy;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +17,19 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -28,6 +42,18 @@ public class CalendarFragment extends Fragment {
     CalendarView calendarView ;
     TextView textView ;
     Calendar calendar;
+    FloatingActionButton addNoteBtn;
+    RecyclerView    recyclerView ;
+
+    NoteAdapter noteAdapter;
+
+    Context mContext ;
+    List<Note> note_list ;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    FirebaseAuth firebaseAuth;
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,12 +100,57 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_calendar,null);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         calendarView = root.findViewById(R.id.calendar);
         textView = root.findViewById(R.id.textview);
 
         calendar = Calendar.getInstance();
+
+        addNoteBtn = root.findViewById(R.id.add_note);
+
+        note_list = new ArrayList<>();
+
+
+        recyclerView = root.findViewById(R.id.recyclerview_calendar);
+
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        noteAdapter = new NoteAdapter( note_list,getActivity());
+        recyclerView.setAdapter(noteAdapter);
+
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar").child("my_notes").child("title");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    Note noteList = snapshot1.getValue(Note.class);
+                    note_list.add(noteList);
+                }
+                noteAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        addNoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent ;
+                intent = new Intent(getContext() , NoteActivity.class);
+                startActivity(intent);
+            }
+        });
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         textView.setText("Today is : " + currentDate);
@@ -100,6 +171,8 @@ public class CalendarFragment extends Fragment {
         });
         return root;
     }
+
+
     public void setDate(int day , int month , int year) {
         calendar.set(Calendar.YEAR , year);
         calendar.set(Calendar.MONTH, month);
@@ -110,13 +183,14 @@ public class CalendarFragment extends Fragment {
 
     }
 
-    public void getDate(){
-        long date =calendarView.getDate();
+    public void getDate() {
+        long date = calendarView.getDate();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
         calendar.setTimeInMillis(date);
 
-        String selected_date = simpleDateFormat .format(calendar.getTime()) ;
+        String selected_date = simpleDateFormat.format(calendar.getTime());
 
         Toast.makeText(getContext(), selected_date, Toast.LENGTH_SHORT).show();
     }
+
 }
