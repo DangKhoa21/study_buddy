@@ -121,17 +121,19 @@ public class CalendarFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
+        noteAdapter = new NoteAdapter( note_list,getActivity());
+        recyclerView.setAdapter(noteAdapter);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar").child("my_notes");
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar").child("my_notes").child("title");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     Note noteList = snapshot1.getValue(Note.class);
                     note_list.add(noteList);
-                    noteAdapter = new NoteAdapter(note_list ,  getActivity());
-                    recyclerView.setAdapter(noteAdapter);
                 }
+                noteAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -190,4 +192,5 @@ public class CalendarFragment extends Fragment {
 
         Toast.makeText(getContext(), selected_date, Toast.LENGTH_SHORT).show();
     }
+
 }

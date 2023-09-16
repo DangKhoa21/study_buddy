@@ -1,5 +1,6 @@
 package com.example.studybuddy;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.List;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder>
 {
     private final List<Note> noteList ;
-    private  final FragmentActivity context;
+    private Context context;
 
     public NoteAdapter(List<Note> noteList, FragmentActivity context) {
         this.noteList = noteList;
@@ -40,9 +41,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         holder.titleTextView.setText(note.getTitle());
         holder.contentTextView.setText(note.getContent());
-
-        DatabaseReference calendarRef = FirebaseDatabase.getInstance().getReference().child("Calendar")
-                .child(note.title);
 
     }
 
