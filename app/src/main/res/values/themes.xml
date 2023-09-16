@@ -9,13 +9,13 @@
     <style name="ChatTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="colorAccent">@color/sky</item>
+        <item name="colorPrimary">@color/sky</item>
     </style>
 
     <style name="Theme.StudyBuddy" parent="Base.Theme.StudyBuddy" />
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">#84C5E2</item>
+        <item name="colorPrimary">@color/sky</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 

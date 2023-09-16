@@ -49,12 +49,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("Home");
-        }
-        loadFragment(new HomeFragment());
-
         bottomNavigationView = findViewById(R.id.bottom_nav);
+
+        Intent intent = getIntent();
+        String fragmentTag = intent.getStringExtra("FragmentToLoad");
+
+        if (savedInstanceState == null) {
+            if ("ChatFragment".equals(fragmentTag)) {
+                bottomNavigationView.setSelectedItemId(R.id.chat);
+                actionBar.setTitle("Chat");
+                loadFragment(new ChatFragment());
+            } else {
+                actionBar.setTitle("Home");
+                loadFragment(new HomeFragment());
+            }
+        }
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.home) {

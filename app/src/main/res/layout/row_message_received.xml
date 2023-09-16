@@ -1,0 +1,65 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="3dp" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameText"
+        android:padding="7dp"
+        android:text="Name"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_regular"
+        android:layout_toRightOf="@+id/profileImage" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/profileImage"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile"
+        android:layout_alignBottom="@+id/messageText"
+        android:layout_marginEnd="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageText"
+        android:paddingStart="14dp"
+        android:paddingEnd="16dp"
+        android:padding="8dp"
+        android:text="Message"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter_regular"
+        android:layout_alignStart="@+id/nameText"
+        android:layout_below="@id/nameText"
+        android:background="@drawable/received_message_bg"
+        android:visibility="visible"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadImage"
+        android:layout_below="@id/nameText"
+        android:src="@drawable/photo"
+        android:layout_alignStart="@+id/nameText"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageText"
+        android:id="@+id/dateText"
+        android:padding="7dp"
+        android:text="Date"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_regular"
+        android:layout_alignStart="@+id/nameText" />
+
+</RelativeLayout>

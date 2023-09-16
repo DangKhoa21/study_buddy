@@ -1,0 +1,43 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="3dp" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageText"
+        android:paddingStart="16dp"
+        android:paddingEnd="14dp"
+        android:padding="8dp"
+        android:text="Message"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_regular"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/sent_message_bg"
+        android:visibility="visible"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadImage"
+        android:src="@drawable/photo"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageText"
+        android:id="@+id/dateText"
+        android:padding="7dp"
+        android:text="Date"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_regular"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

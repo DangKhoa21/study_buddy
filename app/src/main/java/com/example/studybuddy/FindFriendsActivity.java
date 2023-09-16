@@ -1,7 +1,6 @@
 package com.example.studybuddy;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.ktx.Firebase;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,7 +78,7 @@ public class FindFriendsActivity extends AppCompatActivity
                     @NonNull
                     @Override
                     public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_display_layout, parent,false);
+                        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_message_sent, parent,false);
 
                         FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
                         return viewHolder;
