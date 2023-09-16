@@ -30,7 +30,7 @@ public class FindFriendsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super   .onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -53,37 +53,25 @@ public class FindFriendsActivity extends AppCompatActivity
         FirebaseRecyclerOptions<Contact> options = new FirebaseRecyclerOptions.Builder<Contact>()
                 .setQuery(UserRef ,Contact.class)
                 .build();
+        FirebaseRecyclerAdapter<Contact,FindFriendViewHolder> adapter
+                = new FirebaseRecyclerAdapter<Contact, FindFriendViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, int position, @NonNull Contact model)
+            {
+                holder.userName.setText(model.getName());
+                holder.userStatus.setText(model.getStatus());
+                Picasso.get().load(model.getImage()).placeholder(R.drawable.profile).into(holder.profileImage);
 
-        FirebaseRecyclerAdapter<Contact,FindFriendViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Contact, FindFriendViewHolder>(options) {
-                    @Override
-                    protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull Contact model)
-                    {
-                        holder.userName.setText(model.getName());
-                        holder.userStatus.setText(model.getStatus());
-                        Picasso.get().load(model.getImage()).placeholder(R.drawable.profile).into(holder.profileImage);
+            }
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                String visit_user_id = getRef(position).getKey();
-
-
-                            }
-                        });
-
-                    }
-
-                    @NonNull
-                    @Override
-                    public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_message_sent, parent,false);
-
-                        FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
-                        return viewHolder;
-                    }
-                };
+            @NonNull
+            @Override
+            public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+              View view =LayoutInflater.from(parent.getContext()).inflate(R.layout.user_display_layout,parent,false);
+              FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
+              return  viewHolder; 
+            }
+        };
 
         FindFriendRecyclerList.setAdapter(adapter);
         adapter.startListening();
@@ -96,6 +84,10 @@ public class FindFriendsActivity extends AppCompatActivity
         CircleImageView profileImage ;
         public FindFriendViewHolder(@NonNull View itemView) {
             super(itemView);
+            
+            userName = itemView.findViewById(R.id.user_profile_name);
+            userStatus = itemView.findViewById(R.id.user_status);
+            profileImage = itemView.findViewById(R.id.users_profile_image);
 
         }
     }
