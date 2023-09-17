@@ -19,7 +19,8 @@
         android:text="Meetings"
         android:fontFamily="@font/inter_bold"
         android:textSize="22sp"
-        android:layout_below="@+id/calendar"
+        android:textColor="@color/black"
+        android:layout_marginTop="310dp"
         android:gravity="center">
     </TextView>
 

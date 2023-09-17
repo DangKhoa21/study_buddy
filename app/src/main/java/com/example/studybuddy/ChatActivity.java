@@ -209,7 +209,7 @@ public class ChatActivity extends AppCompatActivity {
                         final TimePickerDialog timePickerDialog = new TimePickerDialog(ChatActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String dateTime = String.format(Locale.getDefault(), "%d/%d/%d %d:%d", dayOfMonth, monthOfYear + 1, year, hourOfDay, minute);
+                                String dateTime = String.format(Locale.getDefault(), "%02d/%02d/%04d %02d:%02d", dayOfMonth, monthOfYear + 1, year, hourOfDay, minute);
                                 dateTimeField.setText(dateTime);
                             }
                         }, hour, minute, true);

@@ -90,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
                         HashMap<Object, String> hashMap = new HashMap<>();
                         hashMap.put("email", email);
                         hashMap.put("uid", uid);
-                        hashMap.put("onlineStatus", "online");
                         hashMap.put("typingTo", "noOne");
                         hashMap.put("phone", "");
                         hashMap.put("cover", "");
@@ -99,6 +98,13 @@ public class LoginActivity extends AppCompatActivity {
                         DatabaseReference reference = database.getReference("Users");
                         reference.child(uid).setValue(hashMap);
                     }
+
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("onlineStatus", "online");
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference reference = database.getReference("Users");
+                    reference.child(user.getUid()).updateChildren(hashMap);
 
                     Toast.makeText(LoginActivity.this, "Register successfully", Toast.LENGTH_LONG).show();
                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);

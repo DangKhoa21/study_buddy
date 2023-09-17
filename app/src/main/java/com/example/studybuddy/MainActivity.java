@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setSelectedItemId(R.id.chat);
                 actionBar.setTitle("Chat");
                 loadFragment(new ChatFragment());
+            } else if ("ProfileFragment".equals(fragmentTag)) {
+                bottomNavigationView.setSelectedItemId(R.id.profile);
+                actionBar.setTitle("Profile");
+                loadFragment(new ProfileFragment());
             } else {
                 actionBar.setTitle("Home");
                 loadFragment(new HomeFragment());

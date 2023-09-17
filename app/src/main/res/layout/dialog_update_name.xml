@@ -28,7 +28,7 @@
             android:id="@+id/nameEd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Date/Time (dd/MM/yyyy hh:mm)"/>
+            android:hint="Name"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

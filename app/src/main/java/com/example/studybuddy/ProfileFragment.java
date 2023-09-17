@@ -365,6 +365,25 @@ public class ProfileFragment extends Fragment {
 
                         }
                     });
+                    databaser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot groupSnapshot : snapshot.getChildren()) {
+                                DataSnapshot messagesSnapshot = groupSnapshot.child("message");
+                                for (DataSnapshot messageSnapshot : messagesSnapshot.getChildren()) {
+                                    if (messageSnapshot.child("uid").getValue().toString()
+                                            .equals(firebaseAuth.getCurrentUser().getUid())) {
+                                        messageSnapshot.getRef().child("name").setValue(value);
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -551,22 +570,20 @@ public class ProfileFragment extends Fragment {
         super.onOptionsItemSelected(item);
 
         if(item.getItemId() == R.id.logout) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", "offline");
+            databaseReference.child(firebaseAuth.getCurrentUser().getUid()).updateChildren(hashMap);
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getContext(), MainActivity.class));
             getActivity().finish();
         }
 
         if(item.getItemId() == R.id.find_friends){
-            sendToFindFriendActivity();
+            startActivity(new Intent(getActivity(), FindFriendsActivity.class));
+            getActivity().finish();
         }
 
         return true;
-    }
-
-    private void sendToFindFriendActivity()
-    {
-        Intent findFriendsIntent = new Intent(getActivity(), FindFriendsActivity.class);
-        startActivity(findFriendsIntent);
     }
 
 }

@@ -1,94 +1,168 @@
 package com.example.studybuddy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FindFriendsActivity extends AppCompatActivity
 {
-    private Toolbar mToolbar;
-    private RecyclerView FindFriendRecyclerList;
-
+    private ActionBar mToolbar;
     private DatabaseReference UserRef;
+
+    FirebaseAuth firebaseAuth;
+    RecyclerView recyclerView;
+    List<ModelUser> usersList;
+    AdapterUser adapterUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super   .onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        FindFriendRecyclerList = (RecyclerView) findViewById(R.id.find_friend_recycler_list);
-        FindFriendRecyclerList.setLayoutManager(new LinearLayoutManager(this));
+        mToolbar = getSupportActionBar();
+        mToolbar.setDisplayHomeAsUpEnabled(true);
+        mToolbar.setDisplayShowHomeEnabled(true);
+        mToolbar.setTitle("Find Friends");
 
-        mToolbar = (Toolbar) findViewById(R.id.find_friends_toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Find Friends");
+        firebaseAuth = FirebaseAuth.getInstance();
+        recyclerView = findViewById(R.id.user_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        usersList = new ArrayList<>();
 
+        loadUsers();
+    }
+
+    private void loadUsers() {
+        UserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelUser modelUser = dataSnapshot1.getValue(ModelUser.class);
+                    if (modelUser.getUid() != null && !modelUser.getUid()
+                            .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        usersList.add(modelUser);
+                    }
+                }
+                adapterUser = new AdapterUser(getApplicationContext(), usersList);
+                recyclerView.setAdapter(adapterUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerOptions<Contact> options = new FirebaseRecyclerOptions.Builder<Contact>()
-                .setQuery(UserRef ,Contact.class)
-                .build();
-        FirebaseRecyclerAdapter<Contact,FindFriendViewHolder> adapter
-                = new FirebaseRecyclerAdapter<Contact, FindFriendViewHolder>(options) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home,menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, int position, @NonNull Contact model)
-            {
-                holder.userName.setText(model.getName());
-                holder.userStatus.setText(model.getStatus());
-                Picasso.get().load(model.getImage()).placeholder(R.drawable.profile).into(holder.profileImage);
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query)) {
+                    searchUsers(query);
+                } else {
+                    loadUsers();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText)) {
+                    searchUsers(newText);
+                } else {
+                    loadUsers();
+                }
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private void searchUsers(String search) {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelUser modelUser = dataSnapshot1.getValue(ModelUser.class);
+                    if (!modelUser.getUid().equals(firebaseUser.getUid())) {
+                        if (modelUser.getName().toLowerCase().contains(search.toLowerCase())) {
+                            usersList.add(modelUser);
+                        }
+                    }
+                    adapterUser = new AdapterUser(getApplicationContext(), usersList);
+                    recyclerView.setAdapter(adapterUser);
+                }
 
             }
 
-            @NonNull
             @Override
-            public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-              View view =LayoutInflater.from(parent.getContext()).inflate(R.layout.user_display_layout,parent,false);
-              FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
-              return  viewHolder; 
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
-        };
-
-        FindFriendRecyclerList.setAdapter(adapter);
-        adapter.startListening();
+        });
     }
 
-    private static class FindFriendViewHolder extends RecyclerView.ViewHolder
-    {
-
-        TextView userName ,userStatus;
-        CircleImageView profileImage ;
-        public FindFriendViewHolder(@NonNull View itemView) {
-            super(itemView);
-            
-            userName = itemView.findViewById(R.id.user_profile_name);
-            userStatus = itemView.findViewById(R.id.user_status);
-            profileImage = itemView.findViewById(R.id.users_profile_image);
-
-        }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("FragmentToLoad", "ProfileFragment");
+        startActivity(intent);
+        finish();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

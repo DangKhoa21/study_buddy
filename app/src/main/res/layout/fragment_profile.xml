@@ -119,6 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password"
+        android:textColor="@color/black"
         android:layout_alignBottom="@+id/change_pass_fab"
         android:layout_toStartOf="@+id/change_pass_fab"
         android:fontFamily="@font/inter_medium"
@@ -147,6 +148,7 @@
         android:layout_toStartOf="@+id/change_photo_fab"
         android:fontFamily="@font/inter_medium"
         android:textSize="18sp"
+        android:textColor="@color/black"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp" />
 
@@ -171,6 +173,7 @@
         android:layout_toStartOf="@+id/change_name_fab"
         android:fontFamily="@font/inter_medium"
         android:textSize="18sp"
+        android:textColor="@color/black"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp" />
 
