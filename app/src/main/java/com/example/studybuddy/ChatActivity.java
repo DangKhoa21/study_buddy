@@ -187,6 +187,8 @@ public class ChatActivity extends AppCompatActivity {
                 meetingInfoMap.put("content", content);
                 meetingInfoMap.put("gname", currentGroupName);
                 MeetingKeyRef.updateChildren(meetingInfoMap);
+
+                Toast.makeText(getApplicationContext(), "New meeting created", Toast.LENGTH_LONG).show();
             }
         });
     }

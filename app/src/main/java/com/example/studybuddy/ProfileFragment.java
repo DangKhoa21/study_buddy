@@ -314,75 +314,60 @@ public class ProfileFragment extends Fragment {
 
     // Show an alert dialog to update name
     private void showNamePhoneUpdate(final String key) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_update_name, null);
+        final EditText nameEd = view.findViewById(R.id.nameEd);
+        Button updateNameButt = view.findViewById(R.id.updateNameButt);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Update " + key);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
 
-        // creating a layout to write the new name
-        LinearLayout layout = new LinearLayout(getActivity());
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(10, 10, 10, 10);
-        final EditText editText = new EditText(getActivity());
-        editText.setHint("Enter " + key);
-        layout.addView(editText);
-        builder.setView(layout);
-
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        updateNameButt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final String value = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(value)) {
-                    pd.show();
-
-                    // Here we are updating the new name
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, value);
-                    databaseReference.child(firebaseAuth.getCurrentUser().getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
+            public void onClick(View v) {
+                pd.show();
+                String value = nameEd.getText().toString().trim();
+                if (TextUtils.isEmpty(value)) {
+                    Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                dialog.dismiss();
+                HashMap<String, Object> result = new HashMap<>();
+                result.put(key, value);
+                databaseReference.child(firebaseAuth.getCurrentUser().getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Name updated", Toast.LENGTH_LONG).show();
+                        nameText.setText(value);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Unable to update", Toast.LENGTH_LONG).show();
+                    }
+                });
+                if (key.equals("name")) {
+                    final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Group");
+                    Query query = databaser.orderByChild("uid").equalTo(uid);
+                    query.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-
-                            // after updated we will show updated
-                            Toast.makeText(getActivity(), "Name updated", Toast.LENGTH_LONG).show();
-                            nameText.setText(value);
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                dataSnapshot1.getRef().child("uname").setValue(value);
+                            }
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            pd.dismiss();
-                            Toast.makeText(getActivity(), "Unable to update", Toast.LENGTH_LONG).show();
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
-                    if (key.equals("name")) {
-                        final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Group");
-                        Query query = databaser.orderByChild("uid").equalTo(uid);
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    String child = databaser.getKey();
-                                    dataSnapshot1.getRef().child("uname").setValue(value);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Unable to update", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                pd.dismiss();
-            }
-        });
-        builder.create().show();
     }
 
     // Show an alert dialog to pick image from camera or gallery

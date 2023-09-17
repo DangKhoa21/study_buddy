@@ -1,5 +1,7 @@
 package com.example.studybuddy;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
@@ -31,11 +34,22 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
     private final List<ModelGroup> modelGroups;
     private final Context context;
     private final String myuid;
+    private final boolean isChat;
+    private ItemClickListener itemClickListener;
 
     public AdapterGroup(Context context, List<ModelGroup> modelGroups) {
         this.context = context;
         this.modelGroups = modelGroups;
         myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        isChat = false;
+    }
+
+    public AdapterGroup(Context context, List<ModelGroup> modelGroups, ItemClickListener itemClickListener, boolean isChat) {
+        this.context = context;
+        this.modelGroups = modelGroups;
+        myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.itemClickListener = itemClickListener;
+        this.isChat = isChat;
     }
 
     @NonNull
@@ -64,7 +78,7 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
         String time_date = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
         holder.group_name.setText(gname);
-        holder.group_des.setText(description);
+        holder.group_des.setText("");
 
         holder.group_image.setVisibility(View.VISIBLE);
         try {
@@ -96,29 +110,90 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
             }
         });
 
-        holder.join_butt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean joined = holder.join_butt.getText().equals("JOINED"); // Check if already joined
+        if (isChat) {
+            holder.join_butt.setVisibility(GONE);
+            DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference()
+                    .child("Group").child(gname).child("message");
+            Query latestMessageQuery = messagesRef.orderByKey().limitToLast(1);
+            latestMessageQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String latestMessageId = null;
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        latestMessageId = childSnapshot.getKey();
+                        break;
+                    }
 
-                if (!joined) {
-                    groupMemberRef.child(myuid).setValue("true");
+                    if (latestMessageId != null) {
+                        DatabaseReference messageRef = messagesRef.child(latestMessageId);
+                        messageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ModelMessage modelMessage = snapshot.getValue(ModelMessage.class);
+                                String name = modelMessage.getName();
+                                String message = modelMessage.getMessage();
+                                String type = modelMessage.getType();
 
-                    holder.join_butt.setText("JOINED");
-                    holder.join_butt.setBackgroundTintList((ContextCompat.getColorStateList(context, R.color.dark_grey)));
-                    Toast.makeText(context, "Joined!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Already joined", Toast.LENGTH_SHORT).show();
+                                if (type.equals("text")) {
+                                    String latest = name + ": " + message;
+                                    if (latest.length() > 30) {
+                                        latest = latest.substring(0, 29) + "...";
+                                    }
+                                    holder.group_des.setText(latest);
+                                }
+                                else if (type.equals("image")) {
+                                    holder.group_des.setText(String.format("%s has sent an image", name));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
 
-                notifyItemChanged(holder.getBindingAdapterPosition());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            holder.itemView.setOnClickListener(view -> {
+                itemClickListener.onItemClick(modelGroups.get(position));
+            });
+        }
+        else {
+            holder.group_des.setText(description);
+            holder.join_butt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean joined = holder.join_butt.getText().equals("JOINED"); // Check if already joined
+
+                    if (!joined) {
+                        groupMemberRef.child(myuid).setValue("true");
+
+                        holder.join_butt.setText("JOINED");
+                        holder.join_butt.setBackgroundTintList((ContextCompat.getColorStateList(context, R.color.dark_grey)));
+                        Toast.makeText(context, "Joined!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Already joined", Toast.LENGTH_SHORT).show();
+                    }
+
+                    notifyItemChanged(holder.getBindingAdapterPosition());
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
         return modelGroups.size();
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(ModelGroup modelGroup);
     }
 
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
@@ -136,6 +211,5 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
             join_butt = itemView.findViewById(R.id.join_butt);
         }
     }
-
 
 }

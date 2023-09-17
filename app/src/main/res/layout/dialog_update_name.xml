@@ -10,57 +10,37 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Password Update"
+        android:text="Name Update"
         android:textAlignment="center"
         android:fontFamily="@font/inter_semibold"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/oldpass"
+        android:id="@+id/nameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        app:passwordToggleEnabled="true">
-
-        <EditText
-            android:id="@+id/oldpasslog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Old Password"
-            android:inputType="textPassword" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newpass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/oldpasslog"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        app:passwordToggleEnabled="true">
+        android:layout_centerVertical="true" >
 
         <EditText
-            android:id="@+id/newpasslog"
+            android:id="@+id/nameEd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="New Password"
-            android:inputType="textPassword" />
+            android:hint="Date/Time (dd/MM/yyyy hh:mm)"/>
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/updatepass"
+        android:id="@+id/updateNameButt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:padding="15dp"
         android:background="@drawable/round_butt"
-        android:text="Update Password"
+        android:text="Update name"
         android:fontFamily="@font/inter_medium"
         android:textColor="@color/black"
         android:textSize="14sp"/>

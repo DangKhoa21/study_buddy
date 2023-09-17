@@ -67,9 +67,9 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelGroup modelGroup = dataSnapshot1.getValue(ModelGroup.class);
                     group_list.add(modelGroup);
-                    adapterGroup = new AdapterGroup(getActivity(), group_list);
-                    recyclerView.setAdapter(adapterGroup);
                 }
+                adapterGroup = new AdapterGroup(getActivity(), group_list);
+                recyclerView.setAdapter(adapterGroup);
             }
 
             @Override
@@ -98,9 +98,9 @@ public class HomeFragment extends Fragment {
                             modelGroup.getDescription().toLowerCase().contains(search.toLowerCase())) {
                         group_list.add(modelGroup);
                     }
-                    adapterGroup = new AdapterGroup(getActivity(), group_list);
-                    recyclerView.setAdapter(adapterGroup);
                 }
+                adapterGroup = new AdapterGroup(getActivity(), group_list);
+                recyclerView.setAdapter(adapterGroup);
             }
 
             @Override
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_home, menu);
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);

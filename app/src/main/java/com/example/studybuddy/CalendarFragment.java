@@ -82,7 +82,7 @@ public class CalendarFragment extends Fragment {
                     }
                 }
 
-                Toast.makeText(getContext(), "There are " + count + " meetings scheduled on this date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),count + " meetings scheduled on this date", Toast.LENGTH_SHORT).show();
             }
         });
 
