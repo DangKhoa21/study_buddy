@@ -69,14 +69,26 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forget password?"
+        android:id="@+id/forget"
+        android:layout_alignEnd="@id/password_layout"
+        android:layout_below="@id/password_layout"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_medium"
+        android:textSize="14sp"/>
+
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/login_butt"
-        android:layout_below="@+id/password_layout"
+        android:layout_below="@+id/forget"
         android:layout_alignStart="@+id/login"
         android:layout_marginEnd="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/inter_semibold"
         android:background="@drawable/round_butt"
         android:text="Login"/>

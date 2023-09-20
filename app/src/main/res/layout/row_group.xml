@@ -62,6 +62,27 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="2dp"/>
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/profile"
+            android:layout_below="@+id/group_image"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:id="@+id/creator_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/creator_image"
+            android:id="@+id/creator_name"
+            android:layout_toEndOf="@id/creator_image"
+            android:text="Creator name"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/inter_medium"
+            android:padding="7dp"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

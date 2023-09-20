@@ -112,6 +112,8 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
 
         if (isChat) {
             holder.join_butt.setVisibility(GONE);
+            holder.creator_name.setVisibility(GONE);
+            holder.creator_image.setVisibility(GONE);
             DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference()
                     .child("Group").child(gname).child("message");
             Query latestMessageQuery = messagesRef.orderByKey().limitToLast(1);
@@ -166,6 +168,15 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
         }
         else {
             holder.group_des.setText(description);
+            holder.creator_name.setText(uname);
+
+            holder.creator_image.setVisibility(View.VISIBLE);
+            try {
+                Glide.with(context).load(udp).placeholder(R.drawable.profile).into(holder.creator_image);
+            } catch (Exception e) {
+                holder.creator_image.setImageResource(R.drawable.profile);
+            }
+
             holder.join_butt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -198,8 +209,8 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
 
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView group_image;
-        private final TextView group_name;
+        private final ImageView group_image, creator_image;
+        private final TextView group_name, creator_name;
         private final TextView group_des;
         private final Button join_butt;
 
@@ -209,6 +220,8 @@ public class AdapterGroup extends RecyclerView.Adapter<AdapterGroup.GroupViewHol
             group_name = itemView.findViewById(R.id.group_name);
             group_des = itemView.findViewById(R.id.group_des);
             join_butt = itemView.findViewById(R.id.join_butt);
+            creator_image = itemView.findViewById(R.id.creator_image);
+            creator_name  = itemView.findViewById(R.id.creator_name);
         }
     }
 
